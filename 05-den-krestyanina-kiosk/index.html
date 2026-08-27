@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Печь в жизни крестьянина — интерактивный день (офлайн)</title>
+  <style>
+    :root{
+      --bg:#0f1115; /* тёмная тема */
+      --fg:#e8e8ea;
+      --muted:#a9acb4;
+      --brand:#ffd166; /* тёплый акцент */
+      --panel:#161922;
+      --panel-2:#1b2030;
+      --ok:#5fc97a;
+      --warn:#ffcc66;
+    }
+    html,body{height:100%}
+    body{
+      margin:0; font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell, Noto Sans, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:var(--bg); color:var(--fg);
+    }
+    header, footer{
+      padding:16px 20px; background:linear-gradient(180deg, #171b24, #12151d);
+      border-bottom:1px solid #232836;
+    }
+    header h1{margin:0 0 6px; font-size:clamp(20px,3.5vw,28px)}
+    header p{margin:0; color:var(--muted)}
+
+    .wrap{padding:16px 20px;}
+
+    /* Tabs */
+    .tabs{display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 18px}
+    .tab{
+      appearance:none; border:1px solid #2b3142; background:#171c29; color:var(--fg);
+      padding:10px 14px; border-radius:999px; cursor:pointer; user-select:none;
+      transition:transform .06s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .tab[aria-selected="true"]{ background:var(--panel-2); outline:2px solid var(--brand);}
+    .tab:focus-visible{ outline:2px solid var(--brand); outline-offset:2px }
+    .tab:active{ transform:translateY(1px)}
+
+    /* Layout */
+    .grid{ display:grid; gap:16px; grid-template-columns:1fr; }
+    @media (min-width: 900px){
+      .grid{ grid-template-columns: 1.2fr 0.9fr; align-items:start; }
+    }
+
+    .sceneCard, .infoCard{
+      background:var(--panel);
+      border:1px solid #232836; border-radius:18px; overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    .sceneCard-header, .infoCard-header{ padding:10px 14px; background:linear-gradient(180deg,#1b2030,#151925); border-bottom:1px solid #232836; color:var(--muted)}
+    .sceneBox{ position:relative; aspect-ratio: 16 / 10; background:#0b0e14;}
+    .sceneBox svg{ width:100%; height:100%}
+
+    .panel{ padding:14px 16px }
+    .title{ font-size:18px; margin:0 0 6px }
+    .desc{ color:var(--muted); margin:0 0 10px }
+    .tags{ display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 10px }
+    .tag{ font-size:12px; padding:4px 10px; border-radius:999px; background:#1f2534; border:1px solid #2b3142; color:#d7d8dd }
+    .bullets{ margin:10px 0 0 18px }
+    .bullets li{ margin:4px 0 }
+
+    footer{ border-top:1px solid #232836; border-bottom:none; color:var(--muted)}
+
+    /* Animations */
+    @keyframes pulseFire{ 0%{opacity:.65; r:14} 50%{opacity:1; r:17} 100%{opacity:.65; r:14} }
+    @keyframes floatUp{ 0%{ transform:translateY(0); opacity:.9 } 100%{ transform:translateY(-24px); opacity:0 } }
+    @keyframes drift{ 0%{ transform:translate(0,0)} 50%{ transform:translate(6px,-6px)} 100%{ transform:translate(0,0)} }
+    @keyframes twinkle{ 0%,100%{ opacity:.3 } 50%{ opacity:1 } }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important }
+    }
+
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Печь в жизни крестьянина — интерактивный день</h1>
+    <p>Выберите время суток и посмотрите, как использовалась русская печь</p>
+  </header>
+
+  <div class="wrap">
+    <div class="tabs" role="tablist" aria-label="Время суток">
+      <button class="tab" id="tab-morning" role="tab" aria-selected="false" aria-controls="panel" data-mode="morning">🌅 Утро</button>
+      <button class="tab" id="tab-day" role="tab" aria-selected="false" aria-controls="panel" data-mode="day">🌤 День</button>
+      <button class="tab" id="tab-evening" role="tab" aria-selected="false" aria-controls="panel" data-mode="evening">🌆 Вечер</button>
+      <button class="tab" id="tab-night" role="tab" aria-selected="false" aria-controls="panel" data-mode="night">🌙 Ночь</button>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: SVG SCENE -->
+      <section class="sceneCard" aria-labelledby="sceneTitle">
+        <div class="sceneCard-header"><span id="sceneTitle">Сцена: изба с печью (SVG)</span></div>
+        <div class="sceneBox">
+          <svg viewBox="0 0 800 500" role="img" aria-labelledby="svgTitle svgDesc">
+            <title id="svgTitle">Интерьер избы с русской печью</title>
+            <desc id="svgDesc">Окно с небом, печь, труба, огонь, дым, пар, одежда, дети и спящий — отображаются по времени суток</desc>
+
+            <!-- BACK WALL / FLOOR -->
+            <rect x="0" y="0" width="800" height="500" fill="#0d111a" />
+            <rect x="0" y="340" width="800" height="160" fill="#141926" />
+
+            <!-- WINDOW skyRect -->
+            <defs>
+              <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop id="skyStop1" offset="0%" stop-color="#8fd3ff"/>
+                <stop id="skyStop2" offset="100%" stop-color="#bde0ff"/>
+              </linearGradient>
+              <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="6" result="b"/>
+                <feMerge>
+                  <feMergeNode in="b"/><feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <g id="windowGroup">
+              <rect x="560" y="60" width="160" height="110" fill="#1d2433" stroke="#2a3347"/>
+              <rect id="skyRect" x="568" y="68" width="144" height="94" fill="url(#skyGrad)"/>
+              <line x1="640" y1="68" x2="640" y2="162" stroke="#2a3347"/>
+              <line x1="568" y1="115" x2="712" y2="115" stroke="#2a3347"/>
+            </g>
+
+            <!-- STOVE BODY -->
+            <g id="stove">
+              <rect x="90" y="140" width="300" height="200" rx="8" ry="8" fill="#1c2332" stroke="#303a52"/>
+              <!-- stove mouth -->
+              <rect x="140" y="200" width="120" height="60" rx="6" fill="#0c0f17" stroke="#293347"/>
+
+              <!-- fire glow -->
+              <g id="fireGroup" aria-label="Свет от огня">
+                <circle id="fireGlow" cx="200" cy="230" r="16" fill="#ffb357" filter="url(#softGlow)" style="opacity:0.0"/>
+                <circle id="spark1" cx="210" cy="208" r="2" fill="#ffd166" style="opacity:0" />
+                <circle id="spark2" cx="186" cy="222" r="2" fill="#ffd166" style="opacity:0" />
+              </g>
+
+              <!-- steam -->
+              <g id="steam" aria-label="Пар" style="opacity:0">
+                <path d="M265 190 C270 180, 275 170, 270 160" stroke="#d7f0ff" stroke-width="2" fill="none"/>
+                <path d="M275 190 C280 180, 285 170, 280 160" stroke="#d7f0ff" stroke-width="2" fill="none"/>
+              </g>
+
+              <!-- drying clothes -->
+              <g id="clothes" aria-label="Сушка одежды" style="opacity:0">
+                <rect x="260" y="155" width="30" height="20" fill="#4a7a9d"/>
+                <rect x="295" y="155" width="24" height="26" fill="#8a9d4a"/>
+                <rect x="323" y="155" width="18" height="22" fill="#9d6f4a"/>
+              </g>
+
+              <!-- lamp glow -->
+              <g id="lamp" aria-label="Лампа" style="opacity:0">
+                <circle id="lampGlow" cx="360" cy="140" r="18" fill="#ffd166" filter="url(#softGlow)"/>
+                <circle cx="360" cy="140" r="4" fill="#ffeb9a"/>
+              </g>
+
+              <!-- chimney and smoke -->
+              <rect x="360" y="60" width="36" height="90" fill="#1c2332" stroke="#303a52"/>
+              <g id="smoke" aria-label="Дым" style="opacity:0">
+                <circle cx="378" cy="48" r="10" fill="#9fb3c8"/>
+                <circle cx="392" cy="36" r="8" fill="#a7bacf"/>
+                <circle cx="406" cy="26" r="6" fill="#b4c6d8"/>
+              </g>
+            </g>
+
+            <!-- table pot (indicates cooking) -->
+            <g id="table" transform="translate(440,240)">
+              <rect x="0" y="0" width="160" height="16" fill="#273045"/>
+              <rect x="8" y="16" width="16" height="40" fill="#232a3d"/>
+              <rect x="136" y="16" width="16" height="40" fill="#232a3d"/>
+              <g id="pot" transform="translate(62,-22)">
+                <ellipse cx="18" cy="18" rx="24" ry="10" fill="#3a425b"/>
+                <rect x="-6" y="18" width="48" height="18" rx="6" fill="#3a425b"/>
+              </g>
+            </g>
+
+            <!-- kids -->
+            <g id="kids" aria-label="Дети" style="opacity:0">
+              <circle cx="520" cy="320" r="12" fill="#bd8a6a"/>
+              <rect x="508" y="332" width="24" height="20" fill="#3c6e71"/>
+              <circle cx="560" cy="320" r="12" fill="#c69b7a"/>
+              <rect x="548" y="332" width="24" height="20" fill="#7b3e80"/>
+              <circle cx="540" cy="300" r="4" fill="#ffd166"/>
+            </g>
+
+            <!-- sleeping person on top (лежанка) -->
+            <g id="sleepGroup" aria-label="Спящий на лежанке" style="opacity:0">
+              <rect x="220" y="120" width="120" height="20" fill="#293248" />
+              <rect x="230" y="100" width="90" height="22" rx="10" fill="#2f3950"/>
+              <circle cx="230" cy="110" r="8" fill="#caa27e"/>
+            </g>
+
+          </svg>
+        </div>
+      </section>
+
+      <!-- RIGHT: INFO PANEL -->
+      <aside class="infoCard" aria-labelledby="infoTitle">
+        <div class="infoCard-header"><span id="infoTitle">Информационная панель</span></div>
+        <div class="panel" id="panel" aria-live="polite">
+          <h2 class="title" id="panelTitle">—</h2>
+          <p class="desc" id="panelDesc">—</p>
+          <div class="tags" id="panelTags"></div>
+          <ul class="bullets" id="panelBullets"></ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <footer>
+    © Музей русской печи • Киоск-версия, офлайн
+  </footer>
+
+  <script src="../shared/museum-promo.js"></script>
+  <script src="../shared/embed-height.js"></script>
+  <script>
+    // ---------- STATE MODEL ----------
+    const STATES = {
+      morning: {
+        title: 'Печь просыпается вместе с домом',
+        desc: 'Растапливают печь, ставят кашу, сушат вещи.',
+        tags: ['растопка','готовка','сушка'],
+        bullets: [
+          'В топке разгорается огонь, идёт лёгкий дым из трубы.',
+          'На столе — горшок с кашей, над печью сушится одежда.',
+          'Пар показывает, что идёт готовка и прогрев.'
+        ],
+        visuals: { fire:'bright', smoke:true, clothes:true, steam:true, kids:false, sleep:false, lamp:false, sky:'dawn' }
+      },
+      day: {
+        title: 'Тепло и дела по хозяйству',
+        desc: 'Готовят обед, сушат грибы, дети играют.',
+        tags: ['обогрев','готовка','игры'],
+        bullets: [
+          'Огонь поддерживают на умеренном уровне.',
+          'На лежанке никто не спит — дети играют у стола.',
+          'Дыма почти нет: тяга стабильна и трубы прогреты.'
+        ],
+        visuals: { fire:'medium', smoke:false, clothes:true, steam:false, kids:true, sleep:false, lamp:false, sky:'day' }
+      },
+      evening: {
+        title: 'Уют и отдых',
+        desc: 'Подтапливают, сушат одежду, ужин готов.',
+        tags: ['подтопка','ужин','уют'],
+        bullets: [
+          'Огонь вновь разгорается ярче, появляется небольшой дым.',
+          'Пар — от горячих блюд и чая.',
+          'Лампа зажжена, в избе теплее и светлее.'
+        ],
+        visuals: { fire:'bright', smoke:true, clothes:true, steam:true, kids:false, sleep:false, lamp:true, sky:'dusk' }
+      },
+      night: {
+        title: 'Отдых и здоровье',
+        desc: 'Спят на лежанке, лампа горит, печь лечит теплом.',
+        tags: ['сон','лечение','безопасность'],
+        bullets: [
+          'Огонь тлеет — мягкий равномерный жар.',
+          'Лампа горит, кто-то спит на лежанке.',
+          'Тяга ровная, дыма не видно.'
+        ],
+        visuals: { fire:'low', smoke:false, clothes:false, steam:false, kids:false, sleep:true, lamp:true, sky:'night' }
+      }
+    };
+
+    const TAB_ORDER = ['morning','day','evening','night'];
+    const visitedTimes = new Set();
+    let museumShown = false;
+    const els = {
+      tabs: Array.from(document.querySelectorAll('.tab')),
+      panelTitle: document.getElementById('panelTitle'),
+      panelDesc: document.getElementById('panelDesc'),
+      panelTags: document.getElementById('panelTags'),
+      panelBullets: document.getElementById('panelBullets'),
+      // SVG parts
+      skyStop1: document.getElementById('skyStop1'),
+      skyStop2: document.getElementById('skyStop2'),
+      fireGlow: document.getElementById('fireGlow'),
+      spark1: document.getElementById('spark1'),
+      spark2: document.getElementById('spark2'),
+      smoke: document.getElementById('smoke'),
+      clothes: document.getElementById('clothes'),
+      steam: document.getElementById('steam'),
+      kids: document.getElementById('kids'),
+      sleepGroup: document.getElementById('sleepGroup'),
+      lamp: document.getElementById('lamp'),
+    };
+
+    function setSky(mode){
+      // smooth colors for different times
+      const schemes = {
+        dawn: ['#8fd3ff','#bde0ff'],
+        day: ['#96d8ff','#d9f0ff'],
+        dusk: ['#734b9a','#172238'],
+        night: ['#0a1020','#0a1020']
+      };
+      const [c1,c2] = schemes[mode] || schemes.day;
+      els.skyStop1.setAttribute('stop-color', c1);
+      els.skyStop2.setAttribute('stop-color', c2);
+    }
+
+    function setFire(level){
+      let opacity = 0, anim = 'none', spark = 0.0;
+      if(level==='bright'){ opacity = 1; anim = 'pulseFire 1.6s infinite ease-in-out'; spark = 1; }
+      if(level==='medium'){ opacity = .55; anim = 'pulseFire 2.2s infinite ease-in-out'; spark = .6; }
+      if(level==='low'){ opacity = .25; anim = 'pulseFire 3.2s infinite ease-in-out'; spark = .3; }
+      els.fireGlow.style.opacity = opacity;
+      els.fireGlow.style.animation = anim;
+      els.spark1.style.animation = spark? 'twinkle 1.2s infinite ease-in-out' : 'none';
+      els.spark2.style.animation = spark? 'twinkle 1.8s infinite ease-in-out' : 'none';
+      els.spark1.style.opacity = spark? .9 : 0;
+      els.spark2.style.opacity = spark? .8 : 0;
+    }
+
+    function show(el, on){ el.style.opacity = on? 1 : 0; el.style.transition = 'opacity .45s ease'; }
+
+    function animateSmoke(on){
+      show(els.smoke, on);
+      if(on){ els.smoke.style.animation = 'drift 6s infinite ease-in-out'; } else { els.smoke.style.animation = 'none'; }
+    }
+
+    function animateSteam(on){
+      show(els.steam, on);
+      if(on){ els.steam.style.animation = 'floatUp 2.4s infinite linear'; } else { els.steam.style.animation = 'none'; }
+    }
+
+    function applyVisuals(v){
+      setSky(v.sky);
+      setFire(v.fire);
+      animateSmoke(!!v.smoke);
+      animateSteam(!!v.steam);
+      show(els.clothes, !!v.clothes);
+      show(els.kids, !!v.kids);
+      show(els.sleepGroup, !!v.sleep);
+      show(els.lamp, !!v.lamp);
+    }
+
+    function renderPanel(state){
+      const s = STATES[state];
+      els.panelTitle.textContent = s.title;
+      els.panelDesc.textContent = s.desc;
+      // tags
+      els.panelTags.innerHTML = '';
+      s.tags.forEach(t=>{
+        const span = document.createElement('span');
+        span.className = 'tag'; span.textContent = t; els.panelTags.appendChild(span);
+      });
+      // bullets
+      els.panelBullets.innerHTML = '';
+      s.bullets.forEach(b=>{
+        const li = document.createElement('li'); li.textContent = b; els.panelBullets.appendChild(li);
+      });
+    }
+
+    function selectTabByState(state){
+      els.tabs.forEach(btn=>{
+        const on = btn.dataset.mode === state;
+        btn.setAttribute('aria-selected', on ? 'true' : 'false');
+        btn.tabIndex = on ? 0 : -1;
+      });
+      localStorage.setItem('stoveDayState', state);
+      renderPanel(state);
+      applyVisuals(STATES[state].visuals);
+      visitedTimes.add(state);
+      if(visitedTimes.size===TAB_ORDER.length&&!museumShown){
+        museumShown=true;
+        setTimeout(()=>showMuseumPromo('Вы прожили целый день у печи!'),650);
+      }
+    }
+
+    function selectNext(dir){
+      const cur = localStorage.getItem('stoveDayState') || 'morning';
+      const idx = TAB_ORDER.indexOf(cur);
+      const next = (idx + dir + TAB_ORDER.length) % TAB_ORDER.length;
+      const state = TAB_ORDER[next];
+      selectTabByState(state);
+      const btn = document.querySelector(`.tab[data-mode="${state}"]`);
+      if(btn) btn.focus();
+    }
+
+    // events
+    els.tabs.forEach(btn=>{
+      btn.addEventListener('click',()=> selectTabByState(btn.dataset.mode));
+      btn.addEventListener('keydown',(e)=>{
+        if(e.key==='ArrowRight'){ e.preventDefault(); selectNext(+1); }
+        if(e.key==='ArrowLeft'){ e.preventDefault(); selectNext(-1); }
+      })
+    });
+
+    // init
+    (function init(){
+      const saved = localStorage.getItem('stoveDayState');
+      const initial = saved && STATES[saved] ? saved : 'morning';
+      selectTabByState(initial);
+    })();
+  </script>
+</body>
+</html>
