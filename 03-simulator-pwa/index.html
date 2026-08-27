@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Интерактивный симулятор печей</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#171a21"/>
+<link rel="icon" href="icon-192.png" sizes="192x192">
+<!-- iOS add-to-home -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Печи">
+<link rel="apple-touch-icon" href="icon-512.png">
+<style>
+  :root{
+    --bg:#0f1115;--card:#171a21;--ink:#e7eaee;--muted:#aab1bd;--accent:#f3b33f;--ok:#34d399;--warn:#f59e0b;--rail:#2a2f3a;--rail-border:#3a4150;--grid-gap:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+  h1{font-size:1.4rem;margin:0 0 8px}
+  .wrap{max-width:1200px;margin:24px auto;padding:0 16px}
+  .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .hint{color:var(--muted);font-size:0.9rem}
+  button{background:#222735;border:1px solid #2f3645;color:var(--ink);padding:10px 14px;border-radius:10px;cursor:pointer;transition:transform .06s ease,opacity .2s}
+  button:hover{transform:translateY(-1px)}
+  button:disabled{opacity:.55;cursor:not-allowed;transform:none}
+  #startAll{background:linear-gradient(to bottom,#2a3242,#242b3a);border-color:#3a4254}
+  .bet-panel{margin:14px 0 18px;padding:16px;border:1px solid #3a4254;border-radius:14px;background:linear-gradient(145deg,#191e28,#141820)}
+  .bet-panel h2{margin:0 0 5px;font-size:1.05rem}.bet-panel p{margin:0 0 12px;color:var(--muted)}
+  .bet-options{display:flex;gap:8px;flex-wrap:wrap}.bet-option{position:relative}.bet-option input{position:absolute;opacity:0;pointer-events:none}.bet-option span{display:block;padding:8px 11px;border:1px solid #3a4254;border-radius:999px;background:#202634;cursor:pointer}.bet-option input:checked+span{color:#16110a;background:var(--accent);border-color:#ffd36b;box-shadow:0 0 0 3px #f3b33f33}.bet-option input:disabled+span{opacity:.6;cursor:not-allowed}
+  .bet-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}.bet-result{min-height:22px;font-weight:700}.bet-result.win{color:#8ff0b8}.bet-result.lose{color:#ffd18a}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--grid-gap)}
+  .stove{background:var(--card);border:2px solid #232a38;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 18px rgba(0,0,0,.15);transition:border-color .25s ease,box-shadow .25s ease}
+  .stove.heatingHighlight{border-color:var(--warn);box-shadow:0 0 14px rgba(245,158,11,.35);}
+  .stove.readyHighlight{border-color:var(--ok);box-shadow:0 0 16px rgba(52,211,153,.45);}
+  .title{display:flex;align-items:center;gap:8px}
+  .badge{font-size:.78rem;padding:3px 8px;border-radius:999px;border:1px solid #2c3342;color:var(--muted)}
+  .badge.idle{background:#1d2432}
+  .badge.heating{background:#2b2430;color:#ffd69b;border-color:#5a3a14}
+  .badge.ready{background:#16261f;color:#baf7d0;border-color:#1f3b2c}
+  .mediaRow{display:grid;grid-template-columns:1fr 60px;gap:12px;align-items:stretch}
+  .media{background:#0e1219;border:1px solid #1e2533;border-radius:12px;display:flex;align-items:center;justify-content:center;position:relative;min-height:180px;overflow:hidden}
+  .media img{width:100%;height:auto;object-fit:contain}
+  .scale{position:relative;background:var(--rail);border:1px solid var(--rail-border);border-radius:10px;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
+  .scale::before{content:"Жар";position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:.72rem;color:var(--muted)}
+  .ticks{position:absolute;inset:0;pointer-events:none}
+  .ticks div{position:absolute;left:0;right:0;height:1px;background:#364055;opacity:.8}
+  .ticks div::after{position:absolute;right:4px;top:-7px;font-size:.7rem;color:#7f8899;content:attr(data-label)}
+  .flame{width:100%;height:0%;background:linear-gradient(to top, #a83d21 0%, #ff7a35 45%, #ffd36b 90%);filter:drop-shadow(0 -2px 8px rgba(243,179,63,.45));border-top-left-radius:60px;border-top-right-radius:60px;transform-origin:bottom center;}
+  .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .meta .timings{display:flex;flex-direction:column;gap:2px;font-variant-numeric:tabular-nums}
+  .label{color:var(--muted);font-size:.78rem}
+  .vals{display:flex;gap:8px;align-items:center}
+  .vals span{padding:2px 6px;border:1px solid #2a3140;border-radius:8px;background:#0f1622}
+  .actions{display:flex;gap:8px}
+  footer{margin-top:24px;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar"><h1>Интерактивный симулятор печей</h1>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button id="startAll" disabled>Сначала сделайте ставку</button>
+        <button id="resetAll">Сбросить результаты</button>
+      </div></div>
+    <p class="hint">Сначала угадайте победителя, затем запускайте гонку печей.</p>
+    <section class="bet-panel" aria-labelledby="betTitle">
+      <h2 id="betTitle">Какая печь прогреется первой?</h2>
+      <p>Выберите один вариант и подтвердите игровую ставку — без неё гонка не начнётся.</p>
+      <div class="bet-options" id="betOptions"></div>
+      <div class="bet-actions"><button id="confirmBet" disabled>Подтвердить ставку</button><div class="bet-result" id="betResult" aria-live="polite">Ставка ещё не сделана.</div></div>
+    </section>
+    <section class="grid" id="grid"></section>
+    <footer>Работает офлайн как PWA. Каждая печь имеет скорость нагрева от 7 до 60 секунд.</footer>
+  </div>
+<script src="../shared/museum-promo.js"></script>
+<script src="../shared/embed-height.js"></script>
+<script>
+// PWA registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js'));
+}
+
+const stovesData=[
+  {name:'Каменка',time:'45 мин',duration:15000,imgStatic:'gg5bc208e054.gif',imgAnim:'gg122c7d9760.gif'},
+  {name:'По-чёрному',time:'60 мин',duration:30000,imgStatic:'gg13441bdd7f.gif',imgAnim:'gg04a7642ce9.gif'},
+  {name:'По-белому',time:'180 мин',duration:60000,imgStatic:'gg62f36d7bfd.gif',imgAnim:'gg2ccb60836e.gif'},
+  {name:'Голландка',time:'90 мин',duration:45000,imgStatic:'gg65b65bc738.gif',imgAnim:'ggf82250599e.gif'},
+  {name:'Буржуйка',time:'20 мин',duration:7000,imgStatic:'gg8fe06d82fe.gif',imgAnim:'gg35b3bef6e2.gif'}
+];
+const grid=document.getElementById('grid');
+grid.innerHTML=stovesData.map(s=>`<article class="stove" data-name="${s.name}" data-duration="${s.duration}" data-imgstatic="${s.imgStatic||''}" data-imganim="${s.imgAnim||''}">
+  <div class="title"><strong>${s.name}</strong><span class="badge idle" data-badge>Ожидает</span></div>
+  <div class="mediaRow">
+    <div class="media">${s.imgStatic?`<img src="${s.imgStatic}" alt="${s.name}">`:''}</div>
+    <div class="scale" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="ticks">
+        <div style="top:80%" data-label="25%"></div>
+        <div style="top:60%" data-label="50%"></div>
+        <div style="top:40%" data-label="75%"></div>
+        <div style="top:20%" data-label="100%"></div>
+      </div>
+      <div class="flame" data-flame></div>
+    </div>
+  </div>
+  <div class="meta"><div class="timings"><div class="label">Время разогрева по умолчанию: <code class="inline">${s.time}</code></div></div></div>
+</article>`).join('');
+class Stove{
+  constructor(root){this.root=root;this.name=root.dataset.name;this.duration=parseInt(root.dataset.duration);this.imgStatic=root.dataset.imgstatic;this.imgAnim=root.dataset.imganim;this.media=root.querySelector('.media');this.badge=root.querySelector('[data-badge]');this.scale=root.querySelector('.scale');this.flame=root.querySelector('[data-flame]');this.state='idle';this.t0=0;this.elapsed=0;this.raf=null;}
+  start(){if(this.state!=='idle')return;this.setState('heating');this.t0=performance.now();if(this.imgAnim){this.media.innerHTML=`<img src="${this.imgAnim}" alt="${this.name}">`;}this.loop();}
+  loop=()=>{this.raf=requestAnimationFrame(this.loop);this.elapsed=performance.now()-this.t0;const p=Math.min(this.elapsed/this.duration,1);this.render(p);if(p>=1){cancelAnimationFrame(this.raf);this.setState('ready');}}
+  reset(){if(this.raf)cancelAnimationFrame(this.raf);this.raf=null;this.elapsed=0;this.render(0);if(this.imgStatic){this.media.innerHTML=`<img src="${this.imgStatic}" alt="${this.name}">`;}this.setState('idle');}
+  setState(s){this.state=s;this.badge.classList.remove('idle','heating','ready');this.root.classList.remove('heatingHighlight','readyHighlight');if(s==='idle'){this.badge.classList.add('idle');this.badge.textContent='Ожидает';}
+    if(s==='heating'){this.badge.classList.add('heating');this.badge.textContent='Греется';this.root.classList.add('heatingHighlight');}
+    if(s==='ready'){this.badge.classList.add('ready');this.badge.textContent='Готово';this.root.classList.add('readyHighlight');if(this.imgStatic){this.media.innerHTML=`<img src="${this.imgStatic}" alt="${this.name}">`;}onStoveReady(this);}}
+  render(p){this.flame.style.height=(p*100)+'%';this.scale.setAttribute('aria-valuenow',Math.round(p*100));} }
+const stoves=[...document.querySelectorAll('.stove')].map(e=>new Stove(e));
+const betOptions=document.getElementById('betOptions');
+const confirmBet=document.getElementById('confirmBet');
+const startAll=document.getElementById('startAll');
+const betResult=document.getElementById('betResult');
+let betChoice='',betLocked=false,raceActive=false,winner='';
+betOptions.innerHTML=stovesData.map(s=>`<label class="bet-option"><input type="radio" name="bet" value="${s.name}"><span>${s.name}</span></label>`).join('');
+betOptions.addEventListener('change',e=>{if(!betLocked&&e.target.name==='bet'){betChoice=e.target.value;confirmBet.disabled=false;betResult.className='bet-result';betResult.textContent=`Вы выбрали: ${betChoice}. Теперь подтвердите ставку.`;}});
+confirmBet.addEventListener('click',()=>{if(!betChoice||betLocked)return;betLocked=true;confirmBet.disabled=true;betOptions.querySelectorAll('input').forEach(input=>input.disabled=true);stoves.forEach(s=>s.reset());startAll.disabled=false;startAll.textContent='Запустить гонку';betResult.className='bet-result';betResult.textContent=`Ставка принята: ${betChoice}. Можно запускать!`;});
+startAll.addEventListener('click',()=>{if(!betLocked||raceActive)return;winner='';raceActive=true;startAll.disabled=true;startAll.textContent='Гонка идёт';betResult.className='bet-result';betResult.textContent=`Ваша ставка — ${betChoice}. Наблюдаем за шкалами жара…`;stoves.forEach(s=>s.start());});
+function onStoveReady(stove){if(!raceActive||winner)return;winner=stove.name;raceActive=false;const won=winner===betChoice;betResult.className='bet-result '+(won?'win':'lose');betResult.textContent=won?`Верно! Первой прогрелась «${winner}». Буржуйка быстро отдаёт жар благодаря лёгкому металлическому корпусу.`:`Не угадали: первой прогрелась «${winner}». Буржуйка нагревается быстро благодаря лёгкому металлическому корпусу, но и остывает быстрее массивных кирпичных печей.`;startAll.textContent='Гонка завершена';setTimeout(()=>showMuseumPromo('Гонка печей завершена!'),900);}
+function resetRace(){stoves.forEach(s=>s.reset());betChoice='';betLocked=false;raceActive=false;winner='';betOptions.querySelectorAll('input').forEach(input=>{input.disabled=false;input.checked=false});confirmBet.disabled=true;startAll.disabled=true;startAll.textContent='Сначала сделайте ставку';betResult.className='bet-result';betResult.textContent='Ставка ещё не сделана.';}
+document.getElementById('resetAll').addEventListener('click',resetRace);
+</script>
+</body>
+</html>
