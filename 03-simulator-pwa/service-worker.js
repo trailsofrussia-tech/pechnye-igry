@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stoves-pwa-v6';
+const CACHE_NAME = 'stoves-pwa-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -11,6 +11,7 @@ const ASSETS = [
   './gg122c7d9760.gif','./gg13441bdd7f.gif','./gg62f36d7bfd.gif','./ggf82250599e.gif',
   './gg35b3bef6e2.gif','./gg8fe06d82fe.gif','./gg65b65bc738.gif','./gg04a7642ce9.gif','./gg5bc208e054.gif',
   './gg2ccb60836e.gif'
+  ,'./pech-po-chernomu.png','./pech-po-chernomu-fire.png'
 ];
 
 self.addEventListener('install', (e) => {

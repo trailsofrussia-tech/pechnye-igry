@@ -56,6 +56,35 @@
   .vals span{padding:2px 6px;border:1px solid #2a3140;border-radius:8px;background:#0f1622}
   .actions{display:flex;gap:8px}
   footer{margin-top:24px;color:var(--muted);font-size:.85rem}
+  @media(max-width:700px){
+    html,body{height:auto;min-height:100%}
+    .wrap{width:100%;max-width:none;margin:0;padding:8px 6px 62px}
+    .topbar{gap:5px;margin-bottom:4px;align-items:flex-start}
+    .topbar>div{gap:4px!important;flex-wrap:wrap;justify-content:flex-end}
+    h1{max-width:125px;margin-top:3px;font-size:14px;line-height:1.05}
+    button{padding:6px 8px;border-radius:7px;font-size:10px}
+    .hint{margin:3px 0 5px;font-size:9px;line-height:1.2}
+    .bet-panel{margin:0 0 6px;padding:7px;border-radius:9px}
+    .bet-panel h2{margin-bottom:4px;font-size:11px}
+    .bet-panel p{display:none}
+    .bet-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+    .bet-option span{min-width:0;padding:5px 1px;border-radius:6px;text-align:center;font-size:8px;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .bet-actions{display:grid;grid-template-columns:auto 1fr;gap:6px;margin-top:6px}
+    .bet-result{min-height:0;font-size:8px;line-height:1.15}
+    .grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+    .stove{min-width:0;padding:4px;gap:4px;border-radius:8px}
+    .title{display:block;min-width:0;line-height:1}
+    .title strong{display:block;overflow:hidden;text-overflow:ellipsis;font-size:8px;white-space:nowrap}
+    .badge{display:none}
+    .mediaRow{grid-template-columns:minmax(0,1fr) 7px;gap:2px}
+    .media{min-height:52px;border-radius:5px}
+    .media img{width:100%;max-height:62px}
+    .scale{border-radius:4px}.scale::before,.ticks{display:none}
+    .meta{display:block}.timings{min-width:0}
+    .label{font-size:7px;line-height:1.05;text-align:center}
+    .label code{display:block;font-size:8px}
+    footer{display:none}
+  }
 </style>
 </head>
 <body>
@@ -75,8 +104,8 @@
     <section class="grid" id="grid"></section>
     <footer>Работает офлайн как PWA. Каждая печь имеет скорость нагрева от 7 до 60 секунд.</footer>
   </div>
-<script src="../shared/museum-promo.js"></script>
-<script src="../shared/embed-height.js"></script>
+<script src="../shared/museum-promo.js?v=2"></script>
+<script src="../shared/embed-height.js?v=2"></script>
 <script>
 // PWA registration
 if ('serviceWorker' in navigator) {
@@ -85,7 +114,7 @@ if ('serviceWorker' in navigator) {
 
 const stovesData=[
   {name:'Каменка',time:'45 мин',duration:15000,imgStatic:'gg5bc208e054.gif',imgAnim:'gg122c7d9760.gif'},
-  {name:'По-чёрному',time:'60 мин',duration:30000,imgStatic:'gg13441bdd7f.gif',imgAnim:'gg04a7642ce9.gif'},
+  {name:'По-чёрному',time:'60 мин',duration:30000,imgStatic:'pech-po-chernomu.png',imgAnim:'pech-po-chernomu-fire.png'},
   {name:'По-белому',time:'180 мин',duration:60000,imgStatic:'gg62f36d7bfd.gif',imgAnim:'gg2ccb60836e.gif'},
   {name:'Голландка',time:'90 мин',duration:45000,imgStatic:'gg65b65bc738.gif',imgAnim:'ggf82250599e.gif'},
   {name:'Буржуйка',time:'20 мин',duration:7000,imgStatic:'gg8fe06d82fe.gif',imgAnim:'gg35b3bef6e2.gif'}
