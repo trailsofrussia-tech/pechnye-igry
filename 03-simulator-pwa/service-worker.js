@@ -1,10 +1,12 @@
-const CACHE_NAME = 'stoves-pwa-v7';
+const CACHE_NAME = 'stoves-pwa-v8';
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  '../shared/museum-promo.js',
-  '../shared/embed-height.js',
+  '../shared/museum-promo.js?v=3',
+  '../shared/embed-height.js?v=3',
+  '../shared/museum-logo.svg',
+  './glinobitnaya.png',
   './icon-192.png',
   './icon-512.png',
   // gifs
@@ -20,7 +22,7 @@ self.addEventListener('install', (e) => {
 });
 
 self.addEventListener('activate', (e) => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => k !== CACHE_NAME && caches.delete(k)))));
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith('stoves-pwa-') && k !== CACHE_NAME).map(k => caches.delete(k)))));
   self.clients.claim();
 });
 

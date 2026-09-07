@@ -47,7 +47,7 @@
   .scale::before{content:"Жар";position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:.72rem;color:var(--muted)}
   .ticks{position:absolute;inset:0;pointer-events:none}
   .ticks div{position:absolute;left:0;right:0;height:1px;background:#364055;opacity:.8}
-  .ticks div::after{position:absolute;right:4px;top:-7px;font-size:.7rem;color:#7f8899;content:attr(data-label)}
+  .ticks div::after{position:absolute;right:2px;top:-7px;font-size:9px;color:#a9b2c2;content:attr(data-label)}
   .flame{width:100%;height:0%;background:linear-gradient(to top, #a83d21 0%, #ff7a35 45%, #ffd36b 90%);filter:drop-shadow(0 -2px 8px rgba(243,179,63,.45));border-top-left-radius:60px;border-top-right-radius:60px;transform-origin:bottom center;}
   .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
   .meta .timings{display:flex;flex-direction:column;gap:2px;font-variant-numeric:tabular-nums}
@@ -85,11 +85,16 @@
     .label code{display:block;font-size:8px}
     footer{display:none}
   }
+  .bet-panel{background:#f5cf57;color:#30250c;border:2px solid #ffe596;box-shadow:0 0 22px #e7b83326}.bet-panel p,.bet-panel .bet-result{color:#483813}.bet-option span{background:#fff1bf;color:#3c2c0c;border-color:#bc983e}.bet-option input:focus-visible+span{outline:3px solid #3e72c4}.bet-option input:checked+span{background:#603e0e;color:white;border-color:#603e0e}.bet-panel button{background:#493514;color:#fff4d2;border-color:#785c26}.bet-result.win{color:#235729!important}.bet-result.lose{color:#63380b!important}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}.media img{width:100%;height:100%;object-fit:contain}.meta{display:none}footer{display:none}.stove{min-height:0}.mediaRow{min-height:0;flex:1}.media{min-height:0}.title strong{font-size:15px}.scale{min-width:10px}
+  @media(min-width:901px){.wrap{height:var(--pech-viewport-height,100dvh);padding:18px 16px 68px;margin:0 auto;display:flex;flex-direction:column}.grid{flex:1;min-height:0;grid-template-rows:repeat(2,minmax(0,1fr))}.hint{display:none}.topbar{margin-bottom:0}.bet-panel{margin:12px 0}.mediaRow{grid-template-columns:minmax(0,1fr) 30px}.media{min-height:0}.media img{max-height:100%}}
+  @media(max-width:900px){html,body{height:100%;overflow:hidden}.wrap{height:var(--pech-viewport-height,100dvh);display:flex;flex-direction:column;width:100%;padding:12px 10px 66px;margin:0;gap:8px}.topbar{margin:0;gap:8px;flex-shrink:0}.topbar>div{gap:5px!important}h1{font-size:19px;max-width:170px;line-height:1.1;margin:0}.topbar button{font-size:11px;padding:8px 9px;min-height:36px}.hint{display:none}.bet-panel{margin:0;padding:10px;flex-shrink:0}.bet-panel h2{font-size:15px;line-height:1.2;margin-bottom:8px}.bet-panel p{display:none}.bet-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.bet-option span{min-height:31px;padding:7px 3px;font-size:11px;line-height:1.1;border-radius:6px;text-align:center;white-space:normal}.bet-actions{display:flex;gap:8px;margin-top:8px}.bet-actions button{font-size:11px;padding:8px;min-height:34px}.bet-result{font-size:10px;line-height:1.25;flex:1}.grid{flex:1;min-height:0;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:7px}.stove{min-width:0;padding:7px;gap:6px;border-radius:12px}.title{min-height:26px;line-height:1.1;display:block}.title strong{font-size:12px;white-space:normal;overflow:visible;text-overflow:clip}.badge{display:none}.mediaRow{grid-template-columns:minmax(0,1fr) 10px;gap:4px}.media{min-height:0;border-radius:7px}.media img{height:100%;width:100%;max-height:none}.scale::before,.ticks{display:none}}
+  @media(max-height:690px) and (max-width:900px){.wrap{padding-top:7px;gap:5px}.topbar h1{font-size:15px}.topbar button{font-size:10px;min-height:31px;padding:6px}.bet-panel{padding:7px}.bet-panel h2{font-size:13px;margin-bottom:5px}.bet-option span{min-height:26px;padding:5px 2px;font-size:10px}.bet-actions{margin-top:5px}.bet-result{font-size:9px}.title strong{font-size:11px}.title{min-height:23px}}
 </style>
 </head>
-<body>
+<body data-pech-fit>
   <div class="wrap">
-    <div class="topbar"><h1>Интерактивный симулятор печей</h1>
+    <div class="topbar"><h1>Гонка шести печей</h1>
       <div style="display:flex;gap:10px;align-items:center">
         <button id="startAll" disabled>Сначала сделайте ставку</button>
         <button id="resetAll">Сбросить результаты</button>
@@ -104,16 +109,17 @@
     <section class="grid" id="grid"></section>
     <footer>Работает офлайн как PWA. Каждая печь имеет скорость нагрева от 7 до 60 секунд.</footer>
   </div>
-<script src="../shared/museum-promo.js?v=2"></script>
-<script src="../shared/embed-height.js?v=2"></script>
+<script src="../shared/museum-promo.js?v=3"></script>
+<script src="../shared/embed-height.js?v=3"></script>
 <script>
 // PWA registration
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && ['http:','https:'].includes(location.protocol)) {
   window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js'));
 }
 
 const stovesData=[
   {name:'Каменка',time:'45 мин',duration:15000,imgStatic:'gg5bc208e054.gif',imgAnim:'gg122c7d9760.gif'},
+  {name:'Глинобитная',duration:22000,imgStatic:'glinobitnaya.png',imgAnim:'glinobitnaya.png'},
   {name:'По-чёрному',time:'60 мин',duration:30000,imgStatic:'pech-po-chernomu.png',imgAnim:'pech-po-chernomu-fire.png'},
   {name:'По-белому',time:'180 мин',duration:60000,imgStatic:'gg62f36d7bfd.gif',imgAnim:'gg2ccb60836e.gif'},
   {name:'Голландка',time:'90 мин',duration:45000,imgStatic:'gg65b65bc738.gif',imgAnim:'ggf82250599e.gif'},
@@ -134,7 +140,6 @@ grid.innerHTML=stovesData.map(s=>`<article class="stove" data-name="${s.name}" d
       <div class="flame" data-flame></div>
     </div>
   </div>
-  <div class="meta"><div class="timings"><div class="label">Время разогрева по умолчанию: <code class="inline">${s.time}</code></div></div></div>
 </article>`).join('');
 class Stove{
   constructor(root){this.root=root;this.name=root.dataset.name;this.duration=parseInt(root.dataset.duration);this.imgStatic=root.dataset.imgstatic;this.imgAnim=root.dataset.imganim;this.media=root.querySelector('.media');this.badge=root.querySelector('[data-badge]');this.scale=root.querySelector('.scale');this.flame=root.querySelector('[data-flame]');this.state='idle';this.t0=0;this.elapsed=0;this.raf=null;}
@@ -150,13 +155,13 @@ const betOptions=document.getElementById('betOptions');
 const confirmBet=document.getElementById('confirmBet');
 const startAll=document.getElementById('startAll');
 const betResult=document.getElementById('betResult');
-let betChoice='',betLocked=false,raceActive=false,winner='';
+let betChoice='',betLocked=false,raceActive=false,winner='',promoTimer=null;
 betOptions.innerHTML=stovesData.map(s=>`<label class="bet-option"><input type="radio" name="bet" value="${s.name}"><span>${s.name}</span></label>`).join('');
 betOptions.addEventListener('change',e=>{if(!betLocked&&e.target.name==='bet'){betChoice=e.target.value;confirmBet.disabled=false;betResult.className='bet-result';betResult.textContent=`Вы выбрали: ${betChoice}. Теперь подтвердите ставку.`;}});
 confirmBet.addEventListener('click',()=>{if(!betChoice||betLocked)return;betLocked=true;confirmBet.disabled=true;betOptions.querySelectorAll('input').forEach(input=>input.disabled=true);stoves.forEach(s=>s.reset());startAll.disabled=false;startAll.textContent='Запустить гонку';betResult.className='bet-result';betResult.textContent=`Ставка принята: ${betChoice}. Можно запускать!`;});
 startAll.addEventListener('click',()=>{if(!betLocked||raceActive)return;winner='';raceActive=true;startAll.disabled=true;startAll.textContent='Гонка идёт';betResult.className='bet-result';betResult.textContent=`Ваша ставка — ${betChoice}. Наблюдаем за шкалами жара…`;stoves.forEach(s=>s.start());});
-function onStoveReady(stove){if(!raceActive||winner)return;winner=stove.name;raceActive=false;const won=winner===betChoice;betResult.className='bet-result '+(won?'win':'lose');betResult.textContent=won?`Верно! Первой прогрелась «${winner}». Буржуйка быстро отдаёт жар благодаря лёгкому металлическому корпусу.`:`Не угадали: первой прогрелась «${winner}». Буржуйка нагревается быстро благодаря лёгкому металлическому корпусу, но и остывает быстрее массивных кирпичных печей.`;startAll.textContent='Гонка завершена';setTimeout(()=>showMuseumPromo('Гонка печей завершена!'),900);}
-function resetRace(){stoves.forEach(s=>s.reset());betChoice='';betLocked=false;raceActive=false;winner='';betOptions.querySelectorAll('input').forEach(input=>{input.disabled=false;input.checked=false});confirmBet.disabled=true;startAll.disabled=true;startAll.textContent='Сначала сделайте ставку';betResult.className='bet-result';betResult.textContent='Ставка ещё не сделана.';}
+function onStoveReady(stove){if(!raceActive||winner)return;winner=stove.name;raceActive=false;const won=winner===betChoice;betResult.className='bet-result '+(won?'win':'lose');betResult.textContent=won?`Верно! Первой прогрелась «${winner}». Буржуйка быстро отдаёт жар благодаря лёгкому металлическому корпусу.`:`Не угадали: первой прогрелась «${winner}». Буржуйка нагревается быстро благодаря лёгкому металлическому корпусу, но и остывает быстрее массивных кирпичных печей.`;startAll.textContent='Гонка завершена';promoTimer=setTimeout(()=>{if(winner)showMuseumPromo('Гонка печей завершена!')},900);}
+function resetRace(){clearTimeout(promoTimer);stoves.forEach(s=>s.reset());betChoice='';betLocked=false;raceActive=false;winner='';betOptions.querySelectorAll('input').forEach(input=>{input.disabled=false;input.checked=false});confirmBet.disabled=true;startAll.disabled=true;startAll.textContent='Сначала сделайте ставку';betResult.className='bet-result';betResult.textContent='Ставка ещё не сделана.';}
 document.getElementById('resetAll').addEventListener('click',resetRace);
 </script>
 </body>
