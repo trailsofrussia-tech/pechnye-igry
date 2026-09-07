@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img" aria-labelledby="title desc">
+<title id="title">Мастерская печника и кирпичная голландка</title><desc id="desc">Учебный разрез высокой кирпичной печи: топка внизу и последовательные вертикальные дымообороты. Рядом кирпичи, мастерок, отвес и раствор.</desc>
+<defs><linearGradient id="brick" x2="1" y2="1"><stop stop-color="#c18259"/><stop offset="1" stop-color="#a35a3b"/></linearGradient><linearGradient id="cut" x2="1" y2="1"><stop stop-color="#edd0a8"/><stop offset="1" stop-color="#d0a67b"/></linearGradient><filter id="shadow"><feGaussianBlur stdDeviation="9"/></filter><marker id="arrow" markerWidth="6" markerHeight="6" refX="4.5" refY="3" orient="auto"><path d="m0 0 5 3-5 3" fill="none" stroke="#c48143" stroke-width="1.3"/></marker><pattern id="bricks" width="46" height="32" patternUnits="userSpaceOnUse"><rect width="46" height="32" fill="url(#brick)"/><path d="M0 0h46M0 16h46M0 32h46M23 0v16M0 16v16M46 16v16" fill="none" stroke="#e5bb8f" stroke-width="2"/></pattern></defs>
+<path d="M81 300V131l230-84v169Z" fill="#e2d5ba"/><path d="m311 47 249 100v166L311 216Z" fill="#eee3ce"/><path d="m81 300 230-84 249 97-242 111Z" fill="#e4d7bc"/>
+<g stroke="#c6b593" stroke-width="1.2" opacity=".65"><path d="m139 326 236-92m-176 119 238-97m-173 126 236-99M147 276l253 110M213 250l253 110M276 227l250 107"/></g>
+<ellipse cx="324" cy="367" rx="174" ry="26" fill="#302821" opacity=".11" filter="url(#shadow)"/>
+<path d="m208 324 90 34 125-47v42l-125 52-90-39Z" fill="#b39b7a" stroke="#8f785b" stroke-width="2"/>
+<path d="M225 122 312 89l94 34v231l-110 45-71-31Z" fill="url(#bricks)" stroke="#845037" stroke-width="2"/>
+<path d="m225 122 71 27v250l-71-31Z" fill="#8b4d35" opacity=".4"/>
+<g fill="none" stroke="#dfb084" stroke-width="1.6" opacity=".85"><path d="m227 153 69 27m-69 5 69 27m-69 5 69 27m-69 5 69 27m-69 5 69 27m-69 5 69 27m-69 5 69 27M262 137v31m-18 8v32m34-19v32m-16 16v32m-18 1v32m33-18v31m-15 15v31m-17 2v27"/></g>
+<path d="m296 149 110-41v246l-110 45Z" fill="url(#cut)" stroke="#845037" stroke-width="2"/>
+<path d="m309 178 19-7v186l-19 9Zm29-12 22-9v173l-22 9Zm32-23 23-9v177l-23 9Z" fill="#594536"/>
+<path d="m309 178 51-21v20l-51 21Z" fill="#594536"/>
+<path d="m338 313 55-22v20l-55 23Z" fill="#594536"/>
+<path d="m309 338 51-20v44l-51 22Z" fill="#49372a"/>
+<path d="m318 368 30-12" stroke="#966038" stroke-width="5" stroke-linecap="round"/>
+<path d="M318 363c-5-12 4-16 9-27 6 7 4 12 7 14 4-4 5-8 5-11 11 8 15 19 4 24-10 5-18 6-25 0Z" fill="#ce7134"/>
+<path d="M327 362c-2-5 5-10 6-15 8 7 10 11 4 15Z" fill="#f0b95f"/>
+<path d="m310 380 49-20v10l-49 21Z" fill="#9f6b45"/>
+<g fill="none" stroke="#c48143" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"><path d="M319 321V210"/><path d="M320 187l28-12v73"/><path d="M348 268v51l30-12"/><path d="M380 273V159"/></g>
+<path d="m366 107 0-42 30-11 24 10v40l-29 12Z" fill="#af6f4b" stroke="#835438" stroke-width="2"/><path d="m366 65 25 10 29-11-24-10Z" fill="#d5aa7b"/><path d="m375 65 20-7 17 6-20 7Z" fill="#534032"/><path d="m391 76 0 40 29-12V64Z" fill="#bd8258"/><path d="m368 88 23 8 27-10" stroke="#e2b88e" fill="none" stroke-width="2"/>
+<path d="m220 121 77 28 117-44-100-35-94 36Z" fill="#cfa77a" stroke="#996744" stroke-width="2"/>
+<path d="m221 107 76 29 117-43" fill="none" stroke="#eed5b0" stroke-width="2"/>
+<g stroke="#895238" stroke-width="1.5"><path d="m446 337 49 18 24-10v16l-25 11-48-18Z" fill="#ae6845"/><path d="m446 337 25-10 48 18-24 10Z" fill="#d09b71"/><path d="m439 321 47 18 25-10v16l-25 10-47-18Z" fill="#b8744f"/><path d="m439 321 24-10 48 18-25 10Z" fill="#d6a780"/><path d="m476 303 47 18 25-10v16l-25 10-47-18Z" fill="#b8744f"/><path d="m476 303 24-10 48 18-25 10Z" fill="#d6a780"/></g>
+<g transform="translate(155 314)"><path d="M-27 0-19 36c10 8 32 8 41-1L29 0Z" fill="#a69c83" stroke="#766f5c" stroke-width="2"/><ellipse cy="0" rx="28" ry="10" fill="#cbc3ad" stroke="#766f5c" stroke-width="2"/><ellipse cy="1" rx="20" ry="6" fill="#918970"/><path d="M-22-2c0-30 46-30 46 0" fill="none" stroke="#766f5c" stroke-width="3"/><path d="m2-1 17-33 8 3-19 33" fill="#936640"/><path d="m15-24-4-15 20-20 12 8-16 23Z" fill="#bbb9a3" stroke="#777660" stroke-width="2"/></g>
+<path d="m478 158 24 9v82l-24-8Z" fill="#ba9260"/><path d="m490 166 0 56" stroke="#564b37" stroke-width="1.5"/><path d="m484 224 6-12 6 16-6 9Z" fill="#695f4a"/>
+<path d="m462 260 72 27" stroke="#9e784b" stroke-width="9" stroke-linecap="round"/><path d="m480 267 14 5" stroke="#dad7ba" stroke-width="4" stroke-linecap="round"/>
+</svg>

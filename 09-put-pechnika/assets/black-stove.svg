@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" role="img" aria-labelledby="title desc">
+<title id="title">Печь по-чёрному</title><desc id="desc">Стилизованная белая печь на деревянном основании в курной избе. У неё нет дымовой трубы, над устьем виден след копоти, а дым поднимается в помещение.</desc>
+<defs><linearGradient id="plaster" x2="1" y2="1"><stop stop-color="#fbf5e6"/><stop offset="1" stop-color="#dfceb1"/></linearGradient><linearGradient id="wood" x2=".4" y2="1"><stop stop-color="#c89960"/><stop offset="1" stop-color="#987044"/></linearGradient><radialGradient id="soot"><stop stop-color="#4b4035" stop-opacity=".9"/><stop offset="1" stop-color="#756a57" stop-opacity="0"/></radialGradient><filter id="shadow"><feGaussianBlur stdDeviation="9"/></filter></defs>
+<path d="m78 298 242-99 249 105-244 116Z" fill="#e6d9bf"/>
+<path d="M78 298V101L320 27v172Z" fill="#ded0b3"/><path d="M320 27 569 113v191L320 199Z" fill="#e9ddc5"/>
+<g stroke="#c3af8c" stroke-width="2" opacity=".5"><path d="m80 136 238-72M80 170l239-76M80 205l238-80M80 241l238-86M80 276l238-84m242-41-239-83m239 119-239-87m239 122-239-90m239 128-239-95m239 131-238-101"/></g>
+<g fill="none" stroke="#c5b493" stroke-width="1.2"><path d="m130 321 243-102m-179 131 245-103m-180 133 245-105m-180 137 242-110"/></g>
+<ellipse cx="310" cy="353" rx="186" ry="26" fill="#392e22" opacity=".11" filter="url(#shadow)"/>
+<path d="m146 292 155 62 173-74v70l-173 74-155-66Z" fill="url(#wood)" stroke="#805b39" stroke-width="2"/>
+<path d="m301 354 173-74v70l-173 74Z" fill="#a77b46"/>
+<g fill="none" stroke="#7f5a35" stroke-width="2" opacity=".6"><path d="m148 312 153 62 171-74m-323 33 152 62 172-73M195 317v66m-21-86v20m84 58v31m69-43v48m83-82v42"/></g>
+<path d="m138 278 161 63 181-75 2 22-181 77-165-65Z" fill="#d2a66b" stroke="#946d43" stroke-width="2"/>
+<path d="M169 276V146l139-51 146 53v125l-154 67Z" fill="url(#plaster)" stroke="#ae9c7f" stroke-width="2"/>
+<path d="m169 146 130 48v146l-130-54Z" fill="#e9ddc4"/>
+<path d="m169 146 139-51 146 53-155 46Z" fill="#faf3e2"/>
+<path d="M299 194 454 148v125l-155 67Z" fill="#f3ead7"/>
+<path d="m330 153 60-18 43 83-130 95Z" fill="url(#soot)"/>
+<path d="M326 319v-55c0-26 23-54 45-58 25-5 41 11 41 37v38Z" fill="#5c4938"/>
+<path d="M333 313v-49c0-21 20-45 38-49 18-3 31 10 31 30v32Z" fill="#2f2922"/>
+<path d="m333 313 69-36-30-12-39 16Z" fill="#766046"/>
+<path d="m343 299 40-20m-38 5 36 7" stroke="#a77545" stroke-width="5" stroke-linecap="round"/>
+<path d="M349 291c-7-13 4-17 10-28 6 7 3 13 8 14 3-4 4-8 3-11 13 11 14 19 4 25-9 5-19 6-25 0Z" fill="#c97138"/>
+<path d="M357 290c0-7 7-11 7-16 8 7 13 14 3 17Z" fill="#f2bd67"/>
+<g fill="#bdad8e"><path d="m190 178 14 5v43l-14-5Z"/><path d="m216 188 15 5v43l-15-5Z"/><path d="m243 198 19 7v52l-19-7Z"/></g>
+<g fill="#f7efdd"><path d="m193 181 9 3v37l-9-3Z"/><path d="m219 192 9 3v37l-9-3Z"/><path d="m246 202 13 5v44l-13-5Z"/></g>
+<path d="M414 267v-31c0-19 11-39 28-48 23 0 34 12 35 29l1 22Z" fill="#b68b51" stroke="#7f5b32" stroke-width="2"/>
+<path d="m419 218 52-17m-53 36 58-20m-60 41 61-22" fill="none" stroke="#825f36" stroke-width="1.6"/><path d="m437 226 2 16m18-26 2 16" stroke="#e5c386" stroke-width="5" stroke-linecap="round"/>
+<g fill="none" stroke="#8d8370" stroke-width="13" stroke-linecap="round" opacity=".2"><path d="M375 204c-29-20 11-27-2-44s-57-8-35-33 81-1 75-31M401 178c-21-16 23-24 19-43"/></g>
+<path d="m493 319 35 12v34l-35-13Z" fill="#b99160"/><path d="m477 326 34-13 33 13-34 15Z" fill="#d5b480"/><path d="m480 329 3 42m53-37-3 43" stroke="#9b7849" stroke-width="7"/>
+<path d="m119 259 10-3 40 57-8 5Z" fill="#876641"/><path d="m116 254 10-4-4-31-25-7-13 16 7 18Z" fill="#b6a07a" stroke="#7e704f" stroke-width="2"/>
+<g fill="#5c6148"><path d="M514 120v-31l26 9v31Z"/><path d="m518 91 18 6v23l-18-6Z" fill="#adba91"/></g>
+</svg>
