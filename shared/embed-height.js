@@ -1,39 +1,34 @@
 (function(){
-  const isLauncher=Boolean(document.querySelector('a.play'));
-
-  function addGameNavigation(){
-    if(isLauncher||document.querySelector('.pech-game-nav'))return;
-    const style=document.createElement('style');
-    style.textContent=`
-      .pech-game-nav{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom));z-index:90000;display:flex;align-items:center;gap:8px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-      .pech-game-nav a{height:46px;border:1px solid #e3a35d;background:#26160ff0;color:#fff7e8!important;text-decoration:none!important;box-shadow:0 8px 24px #0007;backdrop-filter:blur(8px);display:inline-flex;align-items:center;justify-content:center;font-weight:850}
-      .pech-game-nav a:hover{background:#a44f28}.pech-game-nav a:focus-visible{outline:4px solid #f3b24e;outline-offset:3px}
-      .pech-game-back{padding:0 15px;border-radius:999px;font-size:14px;white-space:nowrap}
-      .pech-museum-home{width:46px;border-radius:50%;background:#fff7e6!important;padding:6px!important}
-      .pech-museum-home:hover{background:#ffe1b8!important}.pech-museum-home img{display:block;width:33px;height:33px}
-      @media(max-width:520px){.pech-game-nav{right:8px;bottom:8px;gap:6px}.pech-game-nav a{height:42px}.pech-game-back{padding:0 12px;font-size:13px}.pech-museum-home{width:42px;padding:6px!important}.pech-museum-home img{width:29px;height:29px}}
-    `;
-    document.head.appendChild(style);
-    const nav=document.createElement('nav');
-    nav.className='pech-game-nav';
-    nav.setAttribute('aria-label','Навигация по играм Музея Печи');
-    nav.innerHTML=`<a class="pech-game-back" href="../index.html">← Назад</a><a class="pech-museum-home" href="https://pechmuseum.ru" target="_blank" rel="noopener noreferrer" aria-label="Открыть сайт Музея Печи" title="Музей Печи"><img src="../shared/museum-logo.svg" alt=""></a>`;
+  const launcher=Boolean(document.querySelector('a.play'));
+  const framed=window.self!==window.top;
+  let parentHeight=0;
+  const style=document.createElement('style');
+  style.textContent=`
+    .pech-game-nav{position:fixed;right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));z-index:90000;display:flex;gap:7px;align-items:center;font:700 13px/1.2 system-ui,sans-serif}
+    .pech-game-nav a{box-sizing:border-box;min-height:44px;display:flex;align-items:center;justify-content:center;background:#fff2d7;color:#3d2518!important;border:1px solid #b18556;text-decoration:none!important;padding:9px 14px;border-radius:30px;box-shadow:0 4px 20px #0004}
+    .pech-game-nav a:hover{background:#ffdf9f}.pech-game-nav a:focus-visible{outline:3px solid #5da4ed;outline-offset:3px}
+    .pech-game-nav .pech-museum-home{padding:7px;width:44px}.pech-game-nav img{display:block;width:29px;height:29px}
+    html.pech-embedded,html.pech-embedded body{height:var(--pech-viewport-height);min-height:0!important}
+    html.pech-embedded body{overflow:auto}
+    html.pech-embedded body[data-pech-fit]{overflow:hidden}
+  `;
+  document.head.appendChild(style);
+  if(!launcher&&!document.querySelector('.pech-game-nav,.floating-nav')){
+    const nav=document.createElement('nav');nav.className='pech-game-nav';nav.setAttribute('aria-label','Навигация Музея Печи');
+    nav.innerHTML='<a class="pech-game-back" href="../index.html">← Обратно к играм</a><a class="pech-museum-home" href="https://pechmuseum.ru" target="_blank" rel="noopener noreferrer" aria-label="Открыть сайт Музея Печи"><img src="../shared/museum-logo.svg" alt="Музей Печи"></a>';
     document.body.appendChild(nav);
   }
-
-  function reportHeight(){
-    if(window.self===window.top)return;
-    const body=document.body;
-    const root=document.documentElement;
-    const height=Math.max(body?body.scrollHeight:0,root?root.scrollHeight:0,620);
-    window.parent.postMessage({type:'pech-games-height',height:height},'*');
+  if(framed&&!launcher)document.documentElement.classList.add('pech-embedded');
+  function size(){
+    const height=framed?Math.max(360,Math.min(parentHeight||screen.availHeight||800,900)):Math.round(window.visualViewport?.height||window.innerHeight);
+    document.documentElement.style.setProperty('--pech-viewport-height',height+'px');
+    if(framed)window.parent.postMessage({type:'pech-games-height',height:launcher?Math.max(document.body.scrollHeight,620):height},'*');
   }
-
-  addGameNavigation();
-  if(window.self===window.top)return;
-  window.addEventListener('load',reportHeight);
-  window.addEventListener('resize',reportHeight);
-  if('ResizeObserver' in window)new ResizeObserver(reportHeight).observe(document.documentElement);
-  setTimeout(reportHeight,100);
-  setTimeout(reportHeight,900);
+  window.addEventListener('message',event=>{
+    if(!framed||event.source!==window.parent||event.data?.type!=='pech-games-viewport')return;
+    const height=Number(event.data.height);if(Number.isFinite(height)&&height>=360&&height<=3000&&height!==parentHeight){parentHeight=height;size();}
+  });
+  window.addEventListener('resize',size);window.visualViewport?.addEventListener('resize',size);window.addEventListener('load',size);
+  if(launcher&&framed&&'ResizeObserver'in window)new ResizeObserver(size).observe(document.body);
+  size();if(framed)window.parent.postMessage({type:'pech-games-viewport-request'},'*');
 })();

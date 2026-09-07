@@ -29,6 +29,7 @@
       #museum-promo a:focus-visible,#museum-promo button:focus-visible{outline:4px solid #f4a33c;outline-offset:3px}
       @media(max-width:520px){#museum-promo .museum-promo-card{padding:50px 15px 16px;max-height:520px}#museum-promo .museum-promo-emblem{width:58px;height:58px;margin-top:-34px}#museum-promo .museum-promo-emblem img{width:45px;height:45px}#museum-promo h2{font-size:22px}#museum-promo p{font-size:14px;margin-bottom:13px}#museum-promo .museum-promo-actions{display:grid;grid-template-columns:1fr 1fr}#museum-promo .museum-promo-vk{grid-column:1/-1}#museum-promo .museum-promo-vk,#museum-promo .museum-promo-home,#museum-promo .museum-promo-later{width:100%;min-height:42px;padding:9px 11px}}
     `;
+    style.textContent+='\n#museum-promo .museum-promo-card{max-height:calc(100dvh - 24px)!important}';
     document.head.appendChild(style);
 
     modal=document.createElement('div');
@@ -61,21 +62,17 @@
     modal.querySelector('.museum-promo-close').addEventListener('click',close);
     modal.querySelector('.museum-promo-later').addEventListener('click',close);
     modal.addEventListener('click',event=>{if(event.target===modal)close()});
-    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!modal.hidden)close()});
+    document.addEventListener('keydown',event=>{if(modal.hidden)return;if(event.key==='Escape')close();if(event.key==='Tab'){const buttons=[...modal.querySelectorAll('a,button')];const first=buttons[0],last=buttons[buttons.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}}});
     return modal;
   }
 
   function setVisiblePosition(modal){
-    const rect=previousFocus&&previousFocus.getBoundingClientRect?previousFocus.getBoundingClientRect():null;
-    const viewportHeight=Math.max(window.innerHeight||0,440);
-    const anchor=rect&&Number.isFinite(rect.top)?rect.top+rect.height/2:viewportHeight/2;
-    const margin=Math.min(230,viewportHeight/2);
-    const y=Math.max(margin,Math.min(viewportHeight-margin,anchor));
-    modal.style.setProperty('--museum-promo-y',y+'px');
+    modal.style.setProperty('--museum-promo-y','50%');
   }
 
   window.showMuseumPromo=function(completionTitle='Игра завершена!'){
     const modal=ensureModal();
+    if(!modal.hidden)return;
     previousFocus=document.activeElement;
     modal.querySelector('.museum-promo-finish').textContent=completionTitle;
     setVisiblePosition(modal);
